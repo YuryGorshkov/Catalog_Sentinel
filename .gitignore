@@ -1,0 +1,43 @@
+# Dependencies
+/vendor/
+/composer.phar
+
+# Local product specifications and working documentation
+*.md
+
+# Test and analysis output
+/.phpunit.cache/
+/.phpunit.result.cache
+/.phpcs-cache
+/.phpstan/
+/coverage/
+/build/
+/dist/
+/var/
+/tmp/
+/temp/
+/tests/Fixture/generated/
+
+# Runtime and local configuration
+/.env
+/.env.*
+!/.env.example
+*.local.php
+*.log
+*.tmp
+*.bak
+
+# Release artifacts
+/*.zip
+/*.tar
+/*.tar.gz
+
+# IDE and operating-system files
+/.idea/
+/.vscode/
+*.iml
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+Desktop.ini
