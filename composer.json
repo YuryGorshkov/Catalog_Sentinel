@@ -1,0 +1,48 @@
+{
+    "name": "gorshkov/catalog-sentinel",
+    "description": "Safety guard for standard 1C-Bitrix CommerceML catalog imports",
+    "type": "bitrix-d7-module",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.1",
+        "ext-xmlreader": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.5",
+        "phpstan/phpstan": "^2.1",
+        "squizlabs/php_codesniffer": "^3.13"
+    },
+    "autoload": {
+        "psr-4": {
+            "Gorshkov\\CatalogSentinel\\Tools\\": "tools/",
+            "Gorshkov\\CatalogSentinel\\": "lib/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Gorshkov\\CatalogSentinel\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "test:unit": "phpunit --testsuite unit",
+        "test:integration": "phpunit --testsuite integration",
+        "lint:syntax": "@php tools/lint.php",
+        "lint:style": "phpcs",
+        "lint": [
+            "@lint:syntax",
+            "@lint:style"
+        ],
+        "analyse": "phpstan analyse --memory-limit=512M",
+        "qa": [
+            "@lint",
+            "@analyse",
+            "@test"
+        ],
+        "test:performance": "@php tests/Performance/run.php"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": false
+    }
+}

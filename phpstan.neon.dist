@@ -1,0 +1,16 @@
+parameters:
+    level: 6
+    paths:
+        - lib
+        - tools
+    excludePaths:
+        analyse:
+            - lib/Infrastructure/Persistence/ORM (?)
+            - lib/Bitrix (?)
+            - lib/Infrastructure/Persistence/BitrixScanRepository.php
+            - lib/Infrastructure/Persistence/BitrixBaselineRepository.php
+            - lib/Infrastructure/Config/BitrixOptionSettingsProvider.php
+            - lib/Infrastructure/Notification/BitrixNotifier.php
+            - lib/Infrastructure/Support/BitrixEventLogger.php
+    tmpDir: .phpstan
+    treatPhpDocTypesAsCertain: false
