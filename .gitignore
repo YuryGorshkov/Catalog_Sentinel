@@ -4,6 +4,7 @@
 
 # Local product specifications and working documentation
 *.md
+!/README.md
 
 # Test and analysis output
 /.phpunit.cache/
