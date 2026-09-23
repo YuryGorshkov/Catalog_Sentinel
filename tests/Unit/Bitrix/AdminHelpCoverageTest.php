@@ -33,4 +33,19 @@ final class AdminHelpCoverageTest extends TestCase
         yield 'full product report' => ['admin/full_report.php', 6];
         yield 'settings' => ['options.php', 10];
     }
+
+    public function testRuleThresholdInputsStayAlignedWhenLabelsWrap(): void
+    {
+        $contents = file_get_contents(dirname(__DIR__, 3) . '/options.php');
+
+        self::assertIsString($contents);
+        self::assertStringContainsString(
+            '.gcs-thresholds .gcs-field{display:flex;flex-direction:column}',
+            $contents,
+        );
+        self::assertStringContainsString(
+            '.gcs-thresholds .gcs-field>input{margin-top:auto}',
+            $contents,
+        );
+    }
 }
