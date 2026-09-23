@@ -240,7 +240,7 @@ final class XmlReaderCommerceMlAnalyzer implements DocumentAnalyzerInterface
 
     private function isScalarElement(string $name): bool
     {
-        return in_array($name, ['Ид', 'Значение', 'Количество', 'КоличествоНаСкладе', 'ЦенаЗаЕдиницу'], true);
+        return in_array($name, ['Ид', 'Наименование', 'Значение', 'Количество', 'КоличествоНаСкладе', 'ЦенаЗаЕдиницу'], true);
     }
 
     private function readScalar(XMLReader $reader, int $startDepth): string
@@ -283,6 +283,12 @@ final class XmlReaderCommerceMlAnalyzer implements DocumentAnalyzerInterface
         if ($name === 'Ид' && $parent === $item->kind) {
             $id = trim($value);
             $item->externalId = $id !== '' ? $id : null;
+
+            return;
+        }
+        if ($name === 'Наименование' && $parent === $item->kind) {
+            $displayName = trim($value);
+            $item->displayName = $displayName !== '' ? $displayName : null;
 
             return;
         }

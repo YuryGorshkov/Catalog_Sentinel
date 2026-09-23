@@ -8,6 +8,8 @@ final class CurrentItemState
 {
     public ?string $externalId = null;
 
+    public ?string $displayName = null;
+
     /** @var list<float> */
     public array $generalStockValues = [];
 
@@ -32,5 +34,10 @@ final class CurrentItemState
     public function sampleId(): string
     {
         return $this->externalId ?? '#' . $this->ordinal;
+    }
+
+    public function sampleLabel(): string
+    {
+        return $this->displayName ?? $this->sampleId();
     }
 }

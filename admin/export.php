@@ -8,7 +8,7 @@ use Gorshkov\CatalogSentinel\Bitrix\Admin\AdminDataProvider;
 use Gorshkov\CatalogSentinel\Bitrix\Admin\AdminGuard;
 
 require $_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/main/include/prolog_admin_before.php';
-Loader::includeModule(AdminGuard::MODULE_ID) || die();
+Loader::includeModule('gorshkov.catalogsentinel') || die();
 AdminGuard::requireRead();
 $id = max(0, (int) ($_GET['id'] ?? 0));
 $format = strtolower((string) ($_GET['format'] ?? 'json'));

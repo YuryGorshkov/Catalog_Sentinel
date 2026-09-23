@@ -7,6 +7,7 @@ namespace Gorshkov\CatalogSentinel\Tests\Unit\Application\Export;
 use Gorshkov\CatalogSentinel\Application\DTO\FileIdentity;
 use Gorshkov\CatalogSentinel\Application\DTO\ScanRecord;
 use Gorshkov\CatalogSentinel\Application\Export\ScanExporter;
+use Gorshkov\CatalogSentinel\Domain\Rule\RuleResult;
 use PHPUnit\Framework\TestCase;
 
 final class ScanExporterTest extends TestCase
@@ -37,10 +38,24 @@ final class ScanExporterTest extends TestCase
             0,
             false,
             '2026-09-22T10:30:00+03:00',
+            [
+                new RuleResult(
+                    'stock.zero_spike',
+                    'BLOCK',
+                    'stock_zero_spike',
+                    ['ratio' => 0.92],
+                    ['min_current_ratio' => 0.8],
+                    ['median_ratio' => 0.08],
+                ),
+            ],
         );
         $exporter = new ScanExporter();
 
-        self::assertStringNotContainsString('C:\\', $exporter->json($scan));
+        $json = $exporter->json($scan);
+        self::assertStringNotContainsString('C:\\', $json);
+        self::assertStringContainsString('stock.zero_spike', $json);
+        self::assertStringContainsString('min_current_ratio', $json);
+        self::assertStringContainsString('median_ratio', $json);
         self::assertStringContainsString("'=SUM(1+1)", $exporter->csv($scan));
     }
 }

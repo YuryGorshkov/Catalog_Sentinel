@@ -40,7 +40,7 @@ final class MetricAccumulator
     {
         ++$this->metrics[MetricNames::VALUE_ERRORS];
         ++$item->numericErrors;
-        $this->samples->add('value_error', $item->sampleId());
+        $this->addItemSample('value_error', $item);
     }
 
     public function finish(CurrentItemState $item): void
@@ -48,7 +48,7 @@ final class MetricAccumulator
         ++$this->metrics[MetricNames::OBJECTS_TOTAL];
         if ($item->externalId === null || $item->externalId === '') {
             ++$this->metrics[MetricNames::OBJECTS_MISSING_ID];
-            $this->samples->add('missing_id', '#' . $item->ordinal);
+            $this->addItemSample('missing_id', $item);
         } else {
             ++$this->metrics[MetricNames::OBJECTS_WITH_ID];
         }
@@ -66,7 +66,7 @@ final class MetricAccumulator
             }
             if ($total <= 0.0) {
                 ++$this->metrics[MetricNames::STOCK_ZERO_OR_NEGATIVE];
-                $this->samples->add('stock_zero_or_negative', $item->sampleId());
+                $this->addItemSample('stock_zero_or_negative', $item);
             } else {
                 ++$this->metrics[MetricNames::STOCK_POSITIVE];
             }
@@ -84,7 +84,7 @@ final class MetricAccumulator
             }
             if ($allZeroOrNegative) {
                 ++$this->metrics[MetricNames::PRICE_ALL_ZERO];
-                $this->samples->add('price_all_zero', $item->sampleId());
+                $this->addItemSample('price_all_zero', $item);
             } else {
                 ++$this->metrics[MetricNames::PRICE_POSITIVE];
             }
@@ -99,9 +99,15 @@ final class MetricAccumulator
                 ++$this->metrics[MetricNames::property($externalId, 'objects_non_empty')];
             } else {
                 ++$this->metrics[MetricNames::property($externalId, 'objects_explicit_empty')];
-                $this->samples->add('property_empty.' . hash('sha256', $externalId), $item->sampleId());
+                $this->addItemSample('property_empty.' . hash('sha256', $externalId), $item);
             }
         }
+    }
+
+    private function addItemSample(string $category, CurrentItemState $item): void
+    {
+        $this->samples->add($category, $item->sampleId());
+        $this->samples->add($category . '.labels', $item->sampleLabel());
     }
 
     /** @return array<string, int|float> */

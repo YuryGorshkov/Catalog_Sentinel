@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Gorshkov\CatalogSentinel\Application\Export;
 
 use Gorshkov\CatalogSentinel\Application\DTO\ScanRecord;
+use Gorshkov\CatalogSentinel\Domain\Rule\RuleResult;
 
 final class ScanExporter
 {
@@ -50,6 +51,19 @@ final class ScanExporter
             'metrics' => $scan->metrics,
             'samples' => $scan->samples,
             'warnings' => $scan->warnings,
+            'rules' => array_map(
+                static fn (RuleResult $rule): array => [
+                    'rule_code' => $rule->ruleCode,
+                    'outcome' => $rule->outcome,
+                    'reason_code' => $rule->reasonCode,
+                    'actual' => $rule->actual,
+                    'thresholds' => $rule->thresholds,
+                    'baseline' => $rule->baseline,
+                    'sample_ids' => $rule->sampleIds,
+                    'evaluated_at' => $rule->evaluatedAt,
+                ],
+                $scan->ruleResults,
+            ),
         ];
     }
 

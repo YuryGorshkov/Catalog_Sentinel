@@ -70,26 +70,32 @@ final class SettingsManager
             'identifier.missing_ratio' => ['min_objects', 'min_missing', 'min_ratio'],
             'file.size_drop' => ['max_ratio', 'min_baseline_bytes'],
         ];
-        foreach ($thresholdNames as $code => $names) {
-            $rules[$code]['enabled'] = isset($input['rules'][$code]['enabled']);
+        foreach ($rules as $code => &$rule) {
+            if ($code === 'xml.well_formed') {
+                $rule['enabled'] = true;
+                $rule['action'] = 'BLOCK';
+                continue;
+            }
+            $rule['enabled'] = isset($input['rules'][$code]['enabled']);
             $action = strtoupper((string) ($input['rules'][$code]['action'] ?? $rules[$code]['action']));
             if (!in_array($action, ['WARN', 'BLOCK'], true)) {
                 $errors[] = 'rules.' . $code . '.action';
             } else {
-                $rules[$code]['action'] = $action;
+                $rule['action'] = $action;
             }
-            foreach ($names as $name) {
+            foreach ($thresholdNames[$code] ?? [] as $name) {
                 $raw = $input['rules'][$code][$name] ?? null;
                 $numeric = filter_var($raw, FILTER_VALIDATE_FLOAT);
                 if ($numeric === false || $numeric < 0 || (str_contains($name, 'ratio') && $numeric > 1)) {
                     $errors[] = 'rules.' . $code . '.' . $name;
                 } else {
-                    $rules[$code][$name] = str_starts_with($name, 'min_') && !str_contains($name, 'ratio')
+                    $rule[$name] = str_starts_with($name, 'min_') && !str_contains($name, 'ratio')
                         ? (int) $numeric
                         : (float) $numeric;
                 }
             }
         }
+        unset($rule);
         if ($errors !== []) {
             return array_values(array_unique($errors));
         }

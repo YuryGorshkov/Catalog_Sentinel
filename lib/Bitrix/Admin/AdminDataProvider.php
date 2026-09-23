@@ -57,6 +57,17 @@ final class AdminDataProvider
         return is_array($row) ? $row : null;
     }
 
+    public function latestScanId(): ?int
+    {
+        $row = ScanTable::getList([
+            'select' => ['ID'],
+            'order' => ['ID' => 'DESC'],
+            'limit' => 1,
+        ])->fetch();
+
+        return is_array($row) ? (int) $row['ID'] : null;
+    }
+
     /**
      * @param array<string, string|int> $filters
      * @return array{rows: list<array<string, mixed>>, total: int}

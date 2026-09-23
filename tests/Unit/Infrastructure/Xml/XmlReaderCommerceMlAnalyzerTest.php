@@ -118,6 +118,19 @@ final class XmlReaderCommerceMlAnalyzerTest extends TestCase
 
         self::assertCount(1, $result->samples['stock_zero_or_negative']);
         self::assertLessThanOrEqual(200, strlen($result->samples['stock_zero_or_negative'][0]));
+        self::assertSame(['Синие джинсы, размер 48'], $result->samples['stock_zero_or_negative.labels']);
+    }
+
+    public function testProductNamesAreStoredOnlyInBoundedSampleLabels(): void
+    {
+        $result = $this->analyzer()->analyze(self::FIXTURES . '/normal_offers.xml', PolicySnapshot::defaults());
+
+        self::assertSame(['offer-2', 'offer-3'], $result->samples['stock_zero_or_negative']);
+        self::assertSame(
+            ['Синие джинсы, размер 48', 'Красная куртка, размер L'],
+            $result->samples['stock_zero_or_negative.labels'],
+        );
+        self::assertSame(['Синие джинсы, размер 48'], $result->samples['price_all_zero.labels']);
     }
 
     public function testUrlPathIsRejectedBeforeXmlReader(): void

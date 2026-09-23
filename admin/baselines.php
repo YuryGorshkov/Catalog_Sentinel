@@ -11,7 +11,7 @@ use Gorshkov\CatalogSentinel\Bitrix\Admin\AdminGuard;
 use Gorshkov\CatalogSentinel\Infrastructure\Persistence\BitrixBaselineRepository;
 
 require $_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/main/include/prolog_admin_before.php';
-Loader::includeModule(AdminGuard::MODULE_ID) || die();
+Loader::includeModule('gorshkov.catalogsentinel') || die();
 Loc::loadMessages(__FILE__);
 AdminGuard::requireRead();
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reset'])) {

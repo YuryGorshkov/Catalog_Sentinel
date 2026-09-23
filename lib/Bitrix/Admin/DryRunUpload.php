@@ -23,7 +23,7 @@ final class DryRunUpload
         }
         $originalName = basename((string) ($file['name'] ?? 'upload.xml'));
         $safeName = preg_replace('/[^A-Za-z0-9._-]+/u', '_', $originalName) ?: 'upload.xml';
-        $temporary = \CTempFile::GetFileName('gcs_' . bin2hex(random_bytes(8)) . '_' . substr($safeName, -100));
+        $temporary = \CTempFile::GetFileName(substr($safeName, -100));
         \CheckDirPath(dirname($temporary) . '/');
         if (!move_uploaded_file($uploaded, $temporary)) {
             throw new \RuntimeException('Unable to move uploaded file.');

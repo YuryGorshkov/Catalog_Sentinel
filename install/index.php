@@ -6,6 +6,7 @@ use Bitrix\Main\Config\Option;
 use Bitrix\Main\EventManager;
 use Bitrix\Main\Loader;
 use Bitrix\Main\Localization\Loc;
+use Bitrix\Main\ModuleManager;
 use Gorshkov\CatalogSentinel\Bitrix\Agent\CleanupAgent;
 use Gorshkov\CatalogSentinel\Bitrix\Event\CatalogImportEventHandler;
 use Gorshkov\CatalogSentinel\Bitrix\Event\CatalogImportSuccessEventHandler;
@@ -40,9 +41,12 @@ class gorshkov_catalogsentinel extends CModule
     public function DoInstall(): void
     {
         global $APPLICATION;
+        $wasInstalled = ModuleManager::isModuleInstalled($this->MODULE_ID);
         try {
             $this->assertRequirements();
-            RegisterModule($this->MODULE_ID);
+            if (!$wasInstalled) {
+                RegisterModule($this->MODULE_ID);
+            }
             $this->InstallDB();
             $this->InstallEvents();
             $this->InstallFiles();
@@ -52,7 +56,9 @@ class gorshkov_catalogsentinel extends CModule
                 __DIR__ . '/step.php',
             );
         } catch (Throwable $exception) {
-            $this->rollbackInstallation();
+            if (!$wasInstalled) {
+                $this->rollbackInstallation();
+            }
             $APPLICATION->ThrowException($exception->getMessage());
         }
     }
@@ -143,7 +149,15 @@ class gorshkov_catalogsentinel extends CModule
     public function UnInstallFiles(): bool
     {
         foreach (glob(__DIR__ . '/admin/*.php') ?: [] as $file) {
-            DeleteFileEx('/bitrix/admin/' . basename($file));
+            $relativePath = '/bitrix/admin/' . basename($file);
+            if (function_exists('DeleteFileEx')) {
+                DeleteFileEx($relativePath);
+                continue;
+            }
+            $absolutePath = rtrim((string) $_SERVER['DOCUMENT_ROOT'], '/\\') . $relativePath;
+            if (is_file($absolutePath) && !unlink($absolutePath)) {
+                throw new RuntimeException('Cannot remove administrative proxy: ' . basename($file));
+            }
         }
 
         return true;
@@ -226,12 +240,22 @@ class gorshkov_catalogsentinel extends CModule
 
     private function rollbackInstallation(): void
     {
+        foreach (
+            [
+                fn (): bool => $this->UnInstallEvents(),
+                fn (): bool => $this->UnInstallFiles(),
+                fn (): bool => $this->UnInstallDB(['delete_data' => 'Y']),
+            ] as $rollbackStep
+        ) {
+            try {
+                $rollbackStep();
+            } catch (Throwable) {
+                // Continue with the remaining independent cleanup steps.
+            }
+        }
         try {
-            $this->UnInstallEvents();
-            $this->UnInstallFiles();
-            $this->UnInstallDB(['delete_data' => 'Y']);
+            UnRegisterModule($this->MODULE_ID);
         } catch (Throwable) {
         }
-        UnRegisterModule($this->MODULE_ID);
     }
 }
