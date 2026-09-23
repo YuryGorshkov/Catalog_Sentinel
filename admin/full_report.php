@@ -132,7 +132,7 @@ require $_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/main/include/prolog_admin_a
 $escape = static fn (mixed $value): string => htmlspecialcharsbx((string) $value);
 ?>
 <style>
-.gcs-report{max-width:820px;margin-bottom:40px;color:#263238}.gcs-report-card{padding:22px;border:1px solid #d7e0e4;border-radius:10px;background:#fff}.gcs-report-card h2{margin:0 0 10px;font-size:21px}.gcs-report-card p{margin:7px 0;color:#5e6d74;line-height:1.55}.gcs-report-meta{display:grid;grid-template-columns:160px 1fr;gap:8px 16px;margin:18px 0;padding:15px;border-radius:7px;background:#f4f7f8}.gcs-report-meta dt{color:#687780}.gcs-report-meta dd{margin:0;font-weight:600;overflow-wrap:anywhere}.gcs-report-upload{margin-top:20px;padding-top:18px;border-top:1px solid #e1e7ea}.gcs-report-upload label{display:block;margin-bottom:8px;font-weight:600}.gcs-report-actions{display:flex;align-items:center;gap:10px;margin-top:16px}.gcs-report-button{min-height:38px;padding:0 18px;border:0;border-radius:5px;background:#315b72;color:#fff;font-weight:bold;cursor:pointer}.gcs-report-back{color:#315b72;text-decoration:none}@media(max-width:600px){.gcs-report-meta{grid-template-columns:1fr;gap:4px}.gcs-report-meta dd{margin-bottom:8px}}
+.gcs-report{max-width:820px;margin-bottom:40px;color:#263238}.gcs-report-card{padding:22px;border:1px solid #d7e0e4;border-radius:10px;background:#fff}.gcs-report-card h2{display:flex;align-items:center;gap:3px;margin:0 0 10px;font-size:21px}.gcs-report-card p{margin:7px 0;color:#5e6d74;line-height:1.55}.gcs-report-meta{display:grid;grid-template-columns:180px 1fr;gap:10px 16px;margin:18px 0;padding:15px;border-radius:7px;background:#f4f7f8}.gcs-report-meta dt{display:flex;align-items:center;gap:3px;color:#687780}.gcs-report-meta dd{margin:0;font-weight:600;overflow-wrap:anywhere}.gcs-report-upload{margin-top:20px;padding-top:18px;border-top:1px solid #e1e7ea}.gcs-report-upload label{display:flex;align-items:center;gap:3px;margin-bottom:8px;font-weight:600}.gcs-report-actions{display:flex;align-items:center;gap:10px;margin-top:16px}.gcs-report-button{min-height:38px;padding:0 18px;border:0;border-radius:5px;background:#315b72;color:#fff;font-weight:bold;cursor:pointer}.gcs-report-back{color:#315b72;text-decoration:none}@media(max-width:600px){.gcs-report-meta{grid-template-columns:1fr;gap:4px}.gcs-report-meta dd{margin-bottom:8px}}
 </style>
 <div class="gcs-report">
     <?php if ($error !== ''): ?><div class="adm-info-message adm-info-message-red"><?= $escape($error) ?></div><?php endif; ?>
@@ -142,19 +142,19 @@ $escape = static fn (mixed $value): string => htmlspecialcharsbx((string) $value
         <div class="adm-info-message"><?= $escape(Loc::getMessage('GCS_FULL_REPORT_UNAVAILABLE')) ?></div>
     <?php else: ?>
         <section class="gcs-report-card">
-            <h2><?= $escape(Loc::getMessage('GCS_FULL_REPORT_HEADING')) ?></h2>
+            <h2><?= $escape(Loc::getMessage('GCS_FULL_REPORT_HEADING')) ?><?php ShowJSHint((string) Loc::getMessage('GCS_HINT_FULL_REPORT')); ?></h2>
             <p><?= $escape(Loc::getMessage('GCS_FULL_REPORT_EXPLAIN')) ?></p>
             <p><?= $escape(Loc::getMessage('GCS_FULL_REPORT_PRIVACY')) ?></p>
             <dl class="gcs-report-meta">
-                <dt><?= $escape(Loc::getMessage('GCS_FILE')) ?></dt><dd><?= $escape($scan->file->fileName) ?></dd>
-                <dt><?= $escape(Loc::getMessage('GCS_FULL_REPORT_EXPECTED_SIZE')) ?></dt><dd><?= number_format($scan->file->size, 0, ',', ' ') ?> <?= $escape(Loc::getMessage('GCS_BYTES')) ?></dd>
-                <dt><?= $escape(Loc::getMessage('GCS_FULL_REPORT_RULES')) ?></dt><dd><?= $escape(implode(', ', $displayRules)) ?></dd>
-                <dt><?= $escape(Loc::getMessage('GCS_MAX_UPLOAD')) ?></dt><dd><?= number_format($maximum, 0, ',', ' ') ?> <?= $escape(Loc::getMessage('GCS_BYTES')) ?></dd>
+                <dt><?= $escape(Loc::getMessage('GCS_FILE')) ?><?php ShowJSHint((string) Loc::getMessage('GCS_HINT_REPORT_FILE')); ?></dt><dd><?= $escape($scan->file->fileName) ?></dd>
+                <dt><?= $escape(Loc::getMessage('GCS_FULL_REPORT_EXPECTED_SIZE')) ?><?php ShowJSHint((string) Loc::getMessage('GCS_HINT_REPORT_SIZE')); ?></dt><dd><?= number_format($scan->file->size, 0, ',', ' ') ?> <?= $escape(Loc::getMessage('GCS_BYTES')) ?></dd>
+                <dt><?= $escape(Loc::getMessage('GCS_FULL_REPORT_RULES')) ?><?php ShowJSHint((string) Loc::getMessage('GCS_HINT_REPORT_RULES')); ?></dt><dd><?= $escape(implode(', ', $displayRules)) ?></dd>
+                <dt><?= $escape(Loc::getMessage('GCS_MAX_UPLOAD')) ?><?php ShowJSHint((string) Loc::getMessage('GCS_HINT_MAX_UPLOAD')); ?></dt><dd><?= number_format($maximum, 0, ',', ' ') ?> <?= $escape(Loc::getMessage('GCS_BYTES')) ?></dd>
             </dl>
             <form class="gcs-report-upload" method="post" enctype="multipart/form-data">
                 <?= bitrix_sessid_post() ?>
                 <input type="hidden" name="id" value="<?= $id ?>">
-                <label for="gcs-full-report-file"><?= $escape(Loc::getMessage('GCS_FULL_REPORT_SELECT_FILE')) ?></label>
+                <label for="gcs-full-report-file"><?= $escape(Loc::getMessage('GCS_FULL_REPORT_SELECT_FILE')) ?><?php ShowJSHint((string) Loc::getMessage('GCS_HINT_REPORT_UPLOAD')); ?></label>
                 <input id="gcs-full-report-file" type="file" name="xml_file" accept=".xml,text/xml,application/xml" required>
                 <div class="gcs-report-actions">
                     <button class="gcs-report-button" type="submit" name="download" value="Y"><?= $escape(Loc::getMessage('GCS_FULL_REPORT_DOWNLOAD')) ?></button>
