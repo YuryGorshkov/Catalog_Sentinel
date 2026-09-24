@@ -1,0 +1,44 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: xmlreader, zip
+          coverage: none
+      - run: composer validate --strict
+      - run: composer install --no-interaction --prefer-dist
+      - run: composer qa
+      - name: Check tag and build release
+        shell: bash
+        run: |
+          VERSION="$(php -r "include 'install/version.php'; echo \$arModuleVersion['VERSION'];")"
+          test "v${VERSION}" = "${GITHUB_REF_NAME}"
+          php tools/build-release.php "build/gorshkov.catalogsentinel-${VERSION}.zip"
+          php tools/validate-release.php "build/gorshkov.catalogsentinel-${VERSION}.zip"
+          sha256sum "build/gorshkov.catalogsentinel-${VERSION}.zip" > "build/gorshkov.catalogsentinel-${VERSION}.zip.sha256"
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          gh release create "${GITHUB_REF_NAME}"
+          "build/gorshkov.catalogsentinel-${GITHUB_REF_NAME#v}.zip"
+          "build/gorshkov.catalogsentinel-${GITHUB_REF_NAME#v}.zip.sha256"
+          --verify-tag
+          --generate-notes
+          --title "Catalog Sentinel ${GITHUB_REF_NAME#v}"

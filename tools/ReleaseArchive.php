@@ -13,7 +13,7 @@ final class ReleaseArchive
 {
     public const ROOT = 'gorshkov.catalogsentinel';
     private const DIRECTORIES = ['admin', 'install', 'lang', 'lib'];
-    private const FILES = ['default_option.php', 'include.php', 'options.php', 'README.md', 'CHANGELOG.md', 'LICENSE'];
+    private const FILES = ['default_option.php', 'include.php', 'options.php', 'README.md', 'LICENSE'];
     private const FORBIDDEN = ['vendor', 'tests', 'tools', '.git', '.github', '.idea', '.vscode', 'PROJECT_STATUS.md'];
 
     /** @return array{path: string, sha256: string, files: int} */

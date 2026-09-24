@@ -12,6 +12,8 @@
 [![Tests](https://img.shields.io/badge/tests-69%20passed-2ea44f)](#проверено-на-реальном-битрикс)
 [![License MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
+[Скачать готовый модуль](https://github.com/YuryGorshkov/Catalog_Sentinel/releases/latest) · [Посмотреть результаты CI](https://github.com/YuryGorshkov/Catalog_Sentinel/actions)
+
 [Почему это важно](#одна-неудачная-выгрузка-может-испортить-весь-каталог) · [Как работает](#как-модуль-защищает-импорт) · [Интерфейс](#всё-нужное-видно-в-административной-панели) · [Установка](#быстрый-старт) · [Безопасность](#приватность-и-безопасность)
 
 </div>
